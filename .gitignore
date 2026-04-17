@@ -1,0 +1,106 @@
+# ----------------------
+
+# Python
+
+# ----------------------
+
+**pycache**/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual Environment
+
+venv/
+env/
+.venv/
+
+# ----------------------
+
+# Environment Variables
+
+# ----------------------
+
+.env
+.env.*
+
+# ----------------------
+
+# Flask / Backend
+
+# ----------------------
+
+instance/
+.webassets-cache
+
+# Logs
+
+*.log
+
+# ----------------------
+
+# Database
+
+# ----------------------
+
+*.db
+*.sql
+
+# (optional: remove above line if you WANT to keep seed.sql)
+
+# ----------------------
+
+# VS Code / IDE
+
+# ----------------------
+
+.vscode/
+.idea/
+
+# ----------------------
+
+# OS Files
+
+# ----------------------
+
+.DS_Store
+Thumbs.db
+
+# ----------------------
+
+# Node (if frontend exists)
+
+# ----------------------
+
+node_modules/
+dist/
+build/
+
+# ----------------------
+
+# Temporary Files
+
+# ----------------------
+
+*.tmp
+*.swp
+
+# ----------------------
+
+# Secrets / Keys
+
+# ----------------------
+
+*.pem
+*.key
+*.crt
+
+# ----------------------
+
+# Testing / Coverage
+
+# ----------------------
+
+.coverage
+htmlcov/

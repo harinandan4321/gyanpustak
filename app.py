@@ -10,14 +10,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'gyanpustak-secret-key-2025')
 
-MYSQL_SOCKET = os.environ.get('MYSQL_SOCKET', '/run/mysqld/mysqld.sock')
+app.secret_key = os.getenv('SECRET_KEY')
+
 DB_CONFIG = {
-    'user': os.environ.get('MYSQL_USER', 'hari'),
-    'password': os.environ.get('MYSQL_PASSWORD', 'password'),
-    'database': os.environ.get('MYSQL_DB', 'gyanpustak'),
-    'unix_socket': MYSQL_SOCKET,
+    'user': os.getenv('MYSQL_USER'),
+    'password': os.getenv('MYSQL_PASSWORD'),
+    'database': os.getenv('MYSQL_DB'),
+    'unix_socket': os.getenv('MYSQL_SOCKET'),
 }
 
 def get_db():
