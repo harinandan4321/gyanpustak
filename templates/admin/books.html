@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Manage Books{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+  <h4 class="fw-bold mb-0"><i class="bi bi-book me-2"></i>Manage Books</h4>
+  <a href="{{ url_for('admin_add_book') }}" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Add Book</a>
+</div>
+<div class="card border-0 shadow-sm rounded-3">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>#</th><th>Title</th><th>Authors</th><th>Category</th><th>Type</th><th>Price</th><th>Qty</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td>{{ book.book_id }}</td>
+          <td><a href="{{ url_for('book_detail', book_id=book.book_id) }}">{{ book.title }}</a></td>
+          <td><small class="text-muted">{{ (book.authors or '—')[:40] }}</small></td>
+          <td><small>{{ book.category_name or '—' }}</small></td>
+          <td>
+            <span class="badge bg-{{ 'success' if book.book_type=='new' else 'warning' }}">{{ book.book_type }}</span>
+            <span class="badge bg-secondary">{{ book.format }}</span>
+          </td>
+          <td>₹{{ "%.0f"|format(book.price) }}</td>
+          <td><span class="badge bg-{{ 'danger' if book.quantity == 0 else 'light text-dark' }}">{{ book.quantity }}</span></td>
+          <td>
+            <a href="{{ url_for('admin_edit_book', book_id=book.book_id) }}" class="btn btn-sm btn-outline-warning">Edit</a>
+            <form method="post" action="{{ url_for('admin_delete_book', book_id=book.book_id) }}" class="d-inline" onsubmit="return confirm('Delete this book?')">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Del</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="text-center text-muted py-4">No books found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

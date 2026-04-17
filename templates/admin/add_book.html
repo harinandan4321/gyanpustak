@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Add Book{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="page-header"><h4 class="fw-bold mb-0"><i class="bi bi-plus-circle me-2"></i>Add New Book</h4></div>
+    <div class="card border-0 shadow-sm rounded-3 p-4">
+      <form method="post">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label fw-semibold">Title *</label>
+            <input type="text" name="title" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Authors (comma-separated)</label>
+            <input type="text" name="authors" class="form-control" placeholder="Author 1, Author 2">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">ISBN</label>
+            <input type="text" name="isbn" class="form-control" placeholder="978-...">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Publisher</label>
+            <input type="text" name="publisher" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Publication Date</label>
+            <input type="date" name="publication_date" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Edition</label>
+            <input type="number" name="edition" class="form-control" value="1" min="1">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Language</label>
+            <input type="text" name="language" class="form-control" value="English">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Format</label>
+            <select name="format" class="form-select">
+              <option value="hardcover">Hardcover</option>
+              <option value="softcover">Softcover</option>
+              <option value="electronic">Electronic</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Book Type</label>
+            <select name="book_type" class="form-select">
+              <option value="new">New</option>
+              <option value="used">Used</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Purchase Option</label>
+            <select name="purchase_option" class="form-select">
+              <option value="both">Both (Buy & Rent)</option>
+              <option value="buy">Buy Only</option>
+              <option value="rent">Rent Only</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Category</label>
+            <select name="category_id" class="form-select">
+              <option value="">Select Category</option>
+              {% for cat in categories %}
+              <option value="{{ cat.category_id }}">{{ cat.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Buy Price (₹) *</label>
+            <input type="number" name="price" class="form-control" step="0.01" min="0" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Rent Price/mo (₹)</label>
+            <input type="number" name="rent_price" class="form-control" step="0.01" min="0">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Quantity</label>
+            <input type="number" name="quantity" class="form-control" value="0" min="0">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Keywords (comma-separated)</label>
+            <input type="text" name="keywords" class="form-control" placeholder="python, programming, algorithms">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea name="description" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn btn-success">Add Book</button>
+          <a href="{{ url_for('admin_books') }}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="page-header"><h4 class="fw-bold mb-0"><i class="bi bi-person-circle me-2"></i>My Profile</h4></div>
+    <div class="card border-0 shadow-sm rounded-3 p-4">
+      <form method="post">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">First Name</label>
+            <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Last Name</label>
+            <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Email (read-only)</label>
+            <input type="email" class="form-control" value="{{ user.email }}" readonly disabled>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Phone</label>
+            <input type="tel" name="phone" class="form-control" value="{{ user.phone or '' }}">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Address</label>
+            <textarea name="address" class="form-control" rows="2">{{ user.address or '' }}</textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-muted">University</label>
+            <input type="text" class="form-control" value="{{ user.university or '' }}" readonly disabled>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-muted">Major</label>
+            <input type="text" class="form-control" value="{{ user.major or '' }}" readonly disabled>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-muted">Status</label>
+            <input type="text" class="form-control" value="{{ user.student_status or '' }}" readonly disabled>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-muted">Year of Study</label>
+            <input type="text" class="form-control" value="{{ user.year_of_study or '' }}" readonly disabled>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

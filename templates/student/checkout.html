@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<div class="page-header"><h4 class="fw-bold mb-0"><i class="bi bi-credit-card me-2"></i>Checkout</h4></div>
+
+<div class="row g-4">
+  <div class="col-md-7">
+    <div class="card border-0 shadow-sm rounded-3 p-4 mb-3">
+      <h5 class="fw-bold mb-3">Shipping Options</h5>
+      <form method="post" id="checkoutForm">
+        <div class="mb-3">
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="shipping_type" value="standard" id="std" checked>
+            <label class="form-check-label" for="std">Standard Shipping (5-7 days) — Free</label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="shipping_type" value="2-day" id="twoday">
+            <label class="form-check-label" for="twoday">2-Day Shipping — ₹99</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="shipping_type" value="1-day" id="oneday">
+            <label class="form-check-label" for="oneday">1-Day Shipping — ₹199</label>
+          </div>
+        </div>
+
+        <hr>
+        <h5 class="fw-bold mb-3">Payment Details</h5>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Card Holder Name</label>
+          <input type="text" name="cc_holder" class="form-control" required placeholder="Name on card">
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Card Number</label>
+          <input type="text" name="cc_number" class="form-control" required placeholder="1234 5678 9012 3456" maxlength="19">
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Expiry Date</label>
+            <input type="text" name="cc_expiry" class="form-control" placeholder="MM/YY" required maxlength="5">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Card Type</label>
+            <select name="cc_type" class="form-select">
+              <option value="visa">Visa</option>
+              <option value="mastercard">Mastercard</option>
+              <option value="amex">American Express</option>
+              <option value="discover">Discover</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <div class="card border-0 shadow-sm rounded-3 p-4">
+      <h5 class="fw-bold mb-3">Order Summary</h5>
+      {% for item in items %}
+      <div class="d-flex justify-content-between mb-2">
+        <span class="text-truncate me-2" style="max-width:180px">{{ item.title }}</span>
+        <span>₹{{ "%.0f"|format(item.rent_price if item.purchase_option == 'rent' and item.rent_price else item.price) }}</span>
+      </div>
+      {% endfor %}
+      <hr>
+      <div class="d-flex justify-content-between fw-bold fs-5 mb-3">
+        <span>Total</span>
+        <span class="price-tag">₹{{ "%.2f"|format(total) }}</span>
+      </div>
+      <button type="submit" form="checkoutForm" class="btn btn-success w-100 py-2">
+        <i class="bi bi-lock me-1"></i>Place Order
+      </button>
+      <p class="text-center text-muted small mt-2"><i class="bi bi-shield-check me-1"></i>Secure & Encrypted Checkout</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

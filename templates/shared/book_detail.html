@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('books') }}">Books</a></li>
+    <li class="breadcrumb-item active text-truncate" style="max-width:200px">{{ book.title }}</li>
+  </ol>
+</nav>
+
+<div class="row g-4">
+  <div class="col-md-3">
+    {% if book.cover_image %}
+      <img src="{{ book.cover_image }}" class="img-fluid rounded-3 shadow" alt="{{ book.title }}">
+    {% else %}
+      <div class="book-cover-placeholder rounded-3 shadow" style="height:300px;font-size:6rem"><i class="bi bi-book"></i></div>
+    {% endif %}
+
+    {% if current_user.get('role') == 'student' %}
+    <div class="card border-0 shadow-sm rounded-3 mt-3 p-3">
+      <form action="{{ url_for('add_to_cart') }}" method="post">
+        <input type="hidden" name="book_id" value="{{ book.book_id }}">
+        {% if book.purchase_option in ('buy', 'both') %}
+        <div class="d-grid mb-2">
+          <input type="hidden" name="purchase_option" value="buy">
+          <button type="submit" class="btn btn-primary" {% if book.quantity == 0 %}disabled{% endif %}>
+            <i class="bi bi-cart-plus me-1"></i>Buy — ₹{{ "%.0f"|format(book.price) }}
+          </button>
+        </div>
+        {% endif %}
+      </form>
+      {% if book.purchase_option in ('rent', 'both') and book.rent_price %}
+      <form action="{{ url_for('add_to_cart') }}" method="post">
+        <input type="hidden" name="book_id" value="{{ book.book_id }}">
+        <input type="hidden" name="purchase_option" value="rent">
+        <div class="d-grid">
+          <button type="submit" class="btn btn-outline-primary" {% if book.quantity == 0 %}disabled{% endif %}>
+            <i class="bi bi-clock me-1"></i>Rent — ₹{{ "%.0f"|format(book.rent_price) }}/mo
+          </button>
+        </div>
+      </form>
+      {% endif %}
+      {% if book.quantity == 0 %}
+      <p class="text-danger small text-center mt-2 mb-0"><i class="bi bi-x-circle me-1"></i>Out of Stock</p>
+      {% else %}
+      <p class="text-success small text-center mt-2 mb-0"><i class="bi bi-check-circle me-1"></i>{{ book.quantity }} in stock</p>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if current_user.get('role') in ['admin', 'superadmin'] %}
+    <div class="mt-3 d-grid gap-2">
+      <a href="{{ url_for('admin_edit_book', book_id=book.book_id) }}" class="btn btn-warning"><i class="bi bi-pencil me-1"></i>Edit Book</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="col-md-9">
+    <div class="page-header">
+      <div class="d-flex gap-2 mb-2">
+        <span class="badge bg-{{ 'success' if book.book_type == 'new' else 'warning' }}">{{ book.book_type|capitalize }}</span>
+        <span class="badge bg-info text-dark">{{ book.format|capitalize }}</span>
+        {% if book.category_name %}
+        <a href="{{ url_for('books', category=book.category_id) }}" class="badge bg-light text-primary text-decoration-none">{{ book.category_name }}</a>
+        {% endif %}
+      </div>
+      <h2 class="fw-bold">{{ book.title }}</h2>
+      {% if book.authors %}
+      <p class="text-muted mb-1">by <strong>{{ book.authors }}</strong></p>
+      {% endif %}
+      {% if book.avg_rating %}
+      <div class="rating-stars">
+        {% for i in range(book.avg_rating|int) %}<i class="bi bi-star-fill"></i>{% endfor %}
+        {% if book.avg_rating % 1 >= 0.5 %}<i class="bi bi-star-half"></i>{% endif %}
+        <span class="text-muted ms-1">{{ "%.1f"|format(book.avg_rating) }} ({{ reviews|length }} reviews)</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-auto">
+        <div class="card border-0 bg-light rounded-3 px-3 py-2">
+          <small class="text-muted">Publisher</small>
+          <div class="fw-semibold">{{ book.publisher or '—' }}</div>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="card border-0 bg-light rounded-3 px-3 py-2">
+          <small class="text-muted">Edition</small>
+          <div class="fw-semibold">{{ book.edition }}{% if book.edition == 1 %}st{% elif book.edition == 2 %}nd{% elif book.edition == 3 %}rd{% else %}th{% endif %} Edition</div>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="card border-0 bg-light rounded-3 px-3 py-2">
+          <small class="text-muted">Language</small>
+          <div class="fw-semibold">{{ book.language }}</div>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="card border-0 bg-light rounded-3 px-3 py-2">
+          <small class="text-muted">ISBN</small>
+          <div class="fw-semibold">{{ book.isbn or '—' }}</div>
+        </div>
+      </div>
+      {% if book.publication_date %}
+      <div class="col-auto">
+        <div class="card border-0 bg-light rounded-3 px-3 py-2">
+          <small class="text-muted">Published</small>
+          <div class="fw-semibold">{{ book.publication_date }}</div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if book.description %}
+    <div class="mb-4">
+      <h5 class="fw-bold">Description</h5>
+      <p class="text-muted">{{ book.description }}</p>
+    </div>
+    {% endif %}
+
+    {% if keywords %}
+    <div class="mb-4">
+      <h5 class="fw-bold">Keywords</h5>
+      {% for kw in keywords %}
+        <a href="{{ url_for('books', q=kw.keyword) }}" class="category-chip">{{ kw.keyword }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <hr>
+
+    <!-- Reviews -->
+    <h5 class="fw-bold mb-3"><i class="bi bi-star me-1"></i>Reviews</h5>
+
+    {% if current_user.get('role') == 'student' %}
+    <div class="card border-0 shadow-sm rounded-3 p-3 mb-4">
+      <h6 class="fw-semibold mb-3">Write a Review</h6>
+      <form action="{{ url_for('add_review', book_id=book.book_id) }}" method="post">
+        <div class="mb-3">
+          <label class="form-label">Rating</label>
+          <select name="rating" class="form-select form-select-sm" style="max-width:200px">
+            <option value="5">★★★★★ Excellent</option>
+            <option value="4">★★★★ Good</option>
+            <option value="3">★★★ Average</option>
+            <option value="2">★★ Poor</option>
+            <option value="1">★ Terrible</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Review</label>
+          <textarea name="review_text" class="form-control" rows="3" placeholder="Share your experience..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Submit Review</button>
+      </form>
+    </div>
+    {% endif %}
+
+    {% for review in reviews %}
+    <div class="card border-0 shadow-sm rounded-3 p-3 mb-3">
+      <div class="d-flex justify-content-between">
+        <strong>{{ review.first_name }} {{ review.last_name }}</strong>
+        <small class="text-muted">{{ review.created_at.strftime('%d %b %Y') if review.created_at else '' }}</small>
+      </div>
+      <div class="rating-stars">
+        {% for i in range(review.rating) %}<i class="bi bi-star-fill" style="font-size:0.85rem"></i>{% endfor %}
+      </div>
+      {% if review.review_text %}
+      <p class="mt-2 mb-0 text-muted">{{ review.review_text }}</p>
+      {% endif %}
+    </div>
+    {% else %}
+    <p class="text-muted">No reviews yet. Be the first to review!</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% if related_books %}
+<hr>
+<h5 class="fw-bold mb-3">Related Books</h5>
+<div class="row row-cols-2 row-cols-md-4 g-3">
+  {% for book in related_books %}
+  <div class="col">
+    <div class="card book-card">
+      <div class="book-cover-placeholder" style="height:150px;font-size:3rem"><i class="bi bi-book"></i></div>
+      <div class="card-body p-2">
+        <h6 class="card-title mb-0 small text-truncate">{{ book.title }}</h6>
+        <small class="text-muted">₹{{ "%.0f"|format(book.price) }}</small>
+        <div class="mt-1"><a href="{{ url_for('book_detail', book_id=book.book_id) }}" class="btn btn-outline-primary btn-sm w-100">View</a></div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

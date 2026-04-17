@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card border-0 shadow-sm rounded-3 p-4">
+      <div class="text-center mb-4">
+        <i class="bi bi-book-half text-primary" style="font-size:2.5rem"></i>
+        <h3 class="fw-bold mt-2">Welcome Back</h3>
+        <p class="text-muted">Sign in to your GyanPustak account</p>
+      </div>
+      <form method="post">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Email Address</label>
+          <input type="email" name="email" class="form-control" required placeholder="you@email.com">
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Password</label>
+          <input type="password" name="password" class="form-control" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary w-100 py-2">Sign In</button>
+      </form>
+      <hr>
+      <p class="text-center mb-0">New student? <a href="{{ url_for('register') }}">Create an account</a></p>
+    </div>
+    <div class="card border-0 shadow-sm rounded-3 p-3 mt-3 bg-light">
+      <small class="text-muted"><strong>Demo Accounts:</strong><br>
+      Student: student@demo.com / password<br>
+      Admin: admin@demo.com / password<br>
+      Support: support@demo.com / password<br>
+      Super Admin: superadmin@demo.com / password</small>
+    </div>
+  </div>
+</div>
+{% endblock %}

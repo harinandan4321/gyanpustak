@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Add Course{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="page-header"><h4 class="fw-bold mb-0"><i class="bi bi-journal-plus me-2"></i>Add Course</h4></div>
+    <div class="card border-0 shadow-sm rounded-3 p-4">
+      <form method="post">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Course Code *</label>
+            <input type="text" name="course_code" class="form-control" required placeholder="CS101">
+          </div>
+          <div class="col-md-8">
+            <label class="form-label fw-semibold">Course Name *</label>
+            <input type="text" name="course_name" class="form-control" required placeholder="Introduction to Computer Science">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">University *</label>
+            <select name="university_id" class="form-select" required>
+              <option value="">Select University</option>
+              {% for uni in universities %}
+              <option value="{{ uni.university_id }}">{{ uni.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">Year</label>
+            <input type="number" name="year" class="form-control" min="2020" max="2030" placeholder="2025">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">Semester</label>
+            <select name="semester" class="form-select">
+              <option value="">—</option>
+              <option value="fall">Fall</option>
+              <option value="spring">Spring</option>
+              <option value="summer">Summer</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Assign Books</label>
+            <div class="border rounded-3 p-3" style="max-height:200px;overflow-y:auto">
+              {% for book in books %}
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <input type="checkbox" name="book_ids" value="{{ book.book_id }}" id="book_{{ book.book_id }}">
+                <label for="book_{{ book.book_id }}" class="me-auto">{{ book.title }}</label>
+                <select name="req_type_{{ book.book_id }}" class="form-select form-select-sm" style="width:130px">
+                  <option value="required">Required</option>
+                  <option value="recommended">Recommended</option>
+                </select>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn btn-success">Add Course</button>
+          <a href="{{ url_for('admin_courses') }}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

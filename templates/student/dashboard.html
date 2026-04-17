@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h4 class="fw-bold mb-0"><i class="bi bi-speedometer2 me-2"></i>Student Dashboard</h4>
+  <p class="text-muted mb-0">Welcome back, {{ current_user.get('first_name') }}!</p>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="stat-card dash-stat dash-stat-blue">
+      <div class="stat-number">{{ recent_orders|length }}</div>
+      <div class="text-muted">Recent Orders</div>
+      <a href="{{ url_for('orders') }}" class="btn btn-sm btn-outline-primary mt-2">View All</a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card dash-stat dash-stat-yellow">
+      <div class="stat-number">{{ recent_tickets|length }}</div>
+      <div class="text-muted">My Tickets</div>
+      <a href="{{ url_for('tickets') }}" class="btn btn-sm btn-outline-warning mt-2">View All</a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card dash-stat dash-stat-green">
+      <a href="{{ url_for('books') }}" class="btn btn-success w-100 py-3">
+        <i class="bi bi-grid" style="font-size:1.5rem"></i>
+        <div class="mt-1">Browse Books</div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card dash-stat dash-stat-red">
+      <a href="{{ url_for('cart') }}" class="btn btn-outline-danger w-100 py-3">
+        <i class="bi bi-cart3" style="font-size:1.5rem"></i>
+        <div class="mt-1">View Cart</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-7">
+    <div class="card border-0 shadow-sm rounded-3">
+      <div class="card-header bg-white fw-bold border-0 pt-3">Recent Orders</div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Order #</th><th>Date</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            {% for order in recent_orders %}
+            <tr>
+              <td>#{{ order.order_id }}</td>
+              <td><small>{{ order.date_created.strftime('%d %b %Y') if order.date_created else '' }}</small></td>
+              <td>₹{{ "%.0f"|format(order.total_amount) }}</td>
+              <td><span class="badge order-status-{{ order.order_status.replace(' ', '-') }}">{{ order.order_status }}</span></td>
+              <td><a href="{{ url_for('order_detail', order_id=order.order_id) }}" class="btn btn-sm btn-outline-primary">View</a></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" class="text-center text-muted py-3">No orders yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div class="card border-0 shadow-sm rounded-3">
+      <div class="card-header bg-white fw-bold border-0 pt-3 d-flex justify-content-between">
+        <span>My Tickets</span>
+        <a href="{{ url_for('create_ticket') }}" class="btn btn-sm btn-primary">+ New</a>
+      </div>
+      <div class="card-body p-0">
+        {% for ticket in recent_tickets %}
+        <a href="{{ url_for('ticket_detail', ticket_id=ticket.ticket_id) }}" class="d-flex align-items-start gap-2 p-3 border-bottom text-decoration-none text-dark hover-elevate">
+          <span class="badge ticket-badge-{{ ticket.status.replace(' ', '-') }} mt-1">{{ ticket.status }}</span>
+          <div>
+            <div class="fw-semibold small">{{ ticket.title }}</div>
+            <small class="text-muted">{{ ticket.category }}</small>
+          </div>
+        </a>
+        {% else %}
+        <p class="text-muted text-center py-3">No tickets submitted.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

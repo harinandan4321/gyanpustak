@@ -1,0 +1,136 @@
+:root {
+  --primary: #1e40af;
+  --primary-dark: #1e3a8a;
+  --accent: #f59e0b;
+}
+
+body { background: #f8fafc; font-family: 'Segoe UI', sans-serif; }
+
+.navbar-brand { font-size: 1.4rem; letter-spacing: -0.5px; }
+
+.hero-section {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%);
+  color: white;
+  padding: 5rem 0;
+  border-radius: 0 0 2rem 2rem;
+}
+
+.hero-section h1 { font-size: 3rem; font-weight: 800; }
+.hero-search { max-width: 600px; }
+
+.book-card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  height: 100%;
+}
+
+.book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.book-cover {
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+}
+
+.book-cover-placeholder {
+  height: 200px;
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: #94a3b8;
+  border-radius: 12px 12px 0 0;
+}
+
+.badge-type { font-size: 0.7rem; }
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.stat-card .stat-number { font-size: 2rem; font-weight: 700; color: #1e40af; }
+
+.sidebar-card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.rating-stars { color: #f59e0b; }
+
+.ticket-badge-new { background: #dbeafe; color: #1d4ed8; }
+.ticket-badge-assigned { background: #fef3c7; color: #b45309; }
+.ticket-badge-in-process { background: #dcfce7; color: #166534; }
+.ticket-badge-completed { background: #e2e8f0; color: #475569; }
+
+.order-status-new { background: #dbeafe; color: #1d4ed8; }
+.order-status-processed { background: #fef3c7; color: #b45309; }
+.order-status-shipped { background: #dcfce7; color: #166534; }
+.order-status-canceled { background: #fee2e2; color: #991b1b; }
+
+.admin-sidebar { background: #1e293b; min-height: calc(100vh - 60px); }
+.admin-sidebar .nav-link { color: #94a3b8; padding: 0.6rem 1rem; border-radius: 8px; }
+.admin-sidebar .nav-link:hover, .admin-sidebar .nav-link.active { background: #334155; color: white; }
+.admin-sidebar .nav-link i { width: 20px; }
+
+.page-header {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+.btn { border-radius: 8px; font-weight: 500; }
+.btn-primary { background: #1e40af; border-color: #1e40af; }
+.btn-primary:hover { background: #1e3a8a; border-color: #1e3a8a; }
+
+.cart-item { border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; background: white; }
+
+table.table { background: white; border-radius: 12px; overflow: hidden; }
+table.table thead { background: #f1f5f9; }
+
+.category-chip {
+  display: inline-block;
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  margin: 0.15rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.category-chip:hover { background: #dbeafe; color: #1d4ed8; }
+
+.price-tag { font-size: 1.3rem; font-weight: 700; color: #059669; }
+.price-tag-rent { font-size: 1.1rem; color: #7c3aed; }
+
+/* Dashboard stats */
+.dash-stat { border-left: 4px solid; }
+.dash-stat-blue { border-color: #3b82f6; }
+.dash-stat-green { border-color: #10b981; }
+.dash-stat-yellow { border-color: #f59e0b; }
+.dash-stat-red { border-color: #ef4444; }

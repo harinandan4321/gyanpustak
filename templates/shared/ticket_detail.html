@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Ticket #{{ ticket.ticket_id }}{% endblock %}
+{% block content %}
+<div class="page-header d-flex align-items-center justify-content-between">
+  <div>
+    <h4 class="fw-bold mb-0">Ticket #{{ ticket.ticket_id }}: {{ ticket.title }}</h4>
+    <small class="text-muted">Created by {{ ticket.first_name }} {{ ticket.last_name }} on {{ ticket.date_logged.strftime('%d %b %Y %H:%M') if ticket.date_logged else '' }}</small>
+  </div>
+  <span class="badge ticket-badge-{{ ticket.status.replace(' ', '-') }} fs-6">{{ ticket.status }}</span>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-8">
+    <div class="card border-0 shadow-sm rounded-3 p-4 mb-3">
+      <h6 class="fw-bold text-muted mb-2">Problem Description</h6>
+      <p>{{ ticket.problem_description }}</p>
+      {% if ticket.solution_description %}
+      <hr>
+      <h6 class="fw-bold text-success mb-2"><i class="bi bi-check-circle me-1"></i>Solution</h6>
+      <p>{{ ticket.solution_description }}</p>
+      {% endif %}
+    </div>
+
+    {% if history %}
+    <div class="card border-0 shadow-sm rounded-3 p-4">
+      <h6 class="fw-bold mb-3">Status History</h6>
+      {% for h in history %}
+      <div class="d-flex gap-3 mb-3">
+        <div class="flex-shrink-0">
+          <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width:36px;height:36px;font-size:0.75rem">
+            {{ h.first_name[0] }}{{ h.last_name[0] }}
+          </div>
+        </div>
+        <div>
+          <strong>{{ h.first_name }} {{ h.last_name }}</strong>
+          <span class="text-muted mx-1">changed status from</span>
+          <span class="badge ticket-badge-{{ h.old_status.replace(' ', '-') if h.old_status else 'new' }}">{{ h.old_status or '—' }}</span>
+          <i class="bi bi-arrow-right mx-1 text-muted"></i>
+          <span class="badge ticket-badge-{{ h.new_status.replace(' ', '-') }}">{{ h.new_status }}</span>
+          {% if h.note %}<p class="text-muted small mb-0 mt-1">{{ h.note }}</p>{% endif %}
+          <small class="text-muted d-block">{{ h.changed_at.strftime('%d %b %Y %H:%M') if h.changed_at else '' }}</small>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm rounded-3 p-4">
+      <h6 class="fw-bold mb-3">Ticket Details</h6>
+      <dl class="row mb-0">
+        <dt class="col-5 text-muted small">Category</dt>
+        <dd class="col-7"><span class="badge bg-light text-dark">{{ ticket.category }}</span></dd>
+        <dt class="col-5 text-muted small">Status</dt>
+        <dd class="col-7"><span class="badge ticket-badge-{{ ticket.status.replace(' ', '-') }}">{{ ticket.status }}</span></dd>
+        <dt class="col-5 text-muted small">Date Logged</dt>
+        <dd class="col-7 small">{{ ticket.date_logged.strftime('%d %b %Y') if ticket.date_logged else '—' }}</dd>
+        {% if ticket.completion_date %}
+        <dt class="col-5 text-muted small">Completed</dt>
+        <dd class="col-7 small">{{ ticket.completion_date.strftime('%d %b %Y') }}</dd>
+        {% endif %}
+      </dl>
+
+      {% set role = current_user.get('role') %}
+      {% if role == 'support' and ticket.status == 'new' %}
+      <hr>
+      <h6 class="fw-semibold">Update Ticket</h6>
+      <form method="post" action="{{ url_for('update_ticket', ticket_id=ticket.ticket_id) }}">
+        <div class="mb-2">
+          <select name="status" class="form-select form-select-sm">
+            <option value="new">Keep as New</option>
+            <option value="assigned">Assign to Admin</option>
+          </select>
+        </div>
+        <div class="mb-2">
+          <textarea name="note" class="form-control form-control-sm" rows="2" placeholder="Note (optional)"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm w-100">Update</button>
+      </form>
+      {% elif role in ['admin', 'superadmin'] and ticket.status != 'new' %}
+      <hr>
+      <h6 class="fw-semibold">Update Ticket</h6>
+      <form method="post" action="{{ url_for('update_ticket', ticket_id=ticket.ticket_id) }}">
+        <div class="mb-2">
+          <select name="status" class="form-select form-select-sm">
+            <option value="assigned" {{ 'selected' if ticket.status=='assigned' }}>Assigned</option>
+            <option value="in-process" {{ 'selected' if ticket.status=='in-process' }}>In Process</option>
+            <option value="completed" {{ 'selected' if ticket.status=='completed' }}>Completed</option>
+          </select>
+        </div>
+        <div class="mb-2">
+          <textarea name="solution_description" class="form-control form-control-sm" rows="2" placeholder="Solution description">{{ ticket.solution_description or '' }}</textarea>
+        </div>
+        <div class="mb-2">
+          <textarea name="note" class="form-control form-control-sm" rows="2" placeholder="Note (optional)"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm w-100">Update</button>
+      </form>
+      {% endif %}
+    </div>
+    <a href="{{ url_for('tickets') }}" class="btn btn-outline-secondary w-100 mt-3">← Back to Tickets</a>
+  </div>
+</div>
+{% endblock %}
